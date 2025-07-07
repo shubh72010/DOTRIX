@@ -79,24 +79,135 @@
   100% { opacity: 0; display: none; z-index: -1; }
 }
 
-.screen { display: none; position: absolute; top: 30px; left: 0; right: 0; bottom: 40px; padding: 15px; overflow-y: auto; flex-direction: column; align-items: center; animation: fadeIn 0.3s ease-in-out forwards; }
-.screen.active { display: flex; }
+.screen {
+  display: none;
+  position: absolute;
+  top: 30px;
+  left: 0;
+  right: 0;
+  bottom: 40px;
+  padding: 15px;
+  overflow-y: auto;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 0.3s ease-in-out forwards;
+}
+.screen.active {
+  display: flex;
+  animation: screenIn 0.3s ease-in-out forwards;
+}
+@keyframes screenIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
 .time { font-size: 48px; font-weight: bold; }
 .date { font-size: 14px; color: #aaa; margin-bottom: 20px; }
-.widget { background: rgba(255, 255, 255, 0.07); border-radius: 12px; padding: 10px; margin: 5px; width: 80px; text-align: center; font-size: 12px; }
-.quick-widgets, .settings-list, .notif-list { display: flex; flex-wrap: wrap; justify-content: center; }
-.app-grid { display: flex; flex-wrap: wrap; justify-content: space-between; }
-.app-icon { width: 60px; height: 60px; background: #292929; border-radius: 14px; display: flex; justify-content: center; align-items: center; margin: 8px; font-size: 10px; }
-.setting-option, .notif-item { width: 100%; background: #2b2b2b; padding: 10px; margin: 4px 0; border-radius: 8px; font-size: 12px; text-align: left; }
-.dock-bar { position: absolute; bottom: 0; width: 100%; display: flex; justify-content: space-around; background: #111; }
-.dock-btn { background: none; border: none; color: #aaa; font-size: 14px; }
-.touch-strip { position: absolute; top: 0; right: 0; width: 10px; height: 100%; background: linear-gradient(to bottom, #5400a8, #222); opacity: 0.5; cursor: pointer; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.card {
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background-color: rgba(17, 25, 40, 0.75);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.125);
+  padding: 10px;
+  margin: 5px;
+  color: white;
+}
+
+.widget, .app-icon, .setting-option, .notif-item {
+  composes: card;
+  width: 80px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.app-icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10px;
+}
+.setting-option, .notif-item {
+  width: 100%;
+  text-align: left;
+  font-size: 12px;
+}
+
+.quick-widgets, .settings-list, .notif-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.app-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.dock-bar {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  background: #111;
+}
+.dock-btn {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 14px;
+}
+.touch-strip {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 100%;
+  background: linear-gradient(to bottom, #5400a8, #222);
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.control-center {
+  position: absolute;
+  bottom: -100%;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(12px);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  transition: bottom 0.3s ease-in-out;
+}
+.control-center.active {
+  bottom: 40px;
+}
+.control-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #222;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
   </style>
 </head>
-<body>
-  <div class="watch-frame">
+<body ontouchstart="">
+  <div class="watch-frame" ontouchstart="toggleControlCenter(event)">
     <div class="boot-screen" id="boot">
       <div class="boot-line">&gt;&gt;&gt; Device: T-ZRO | DOTRIX OS</div>
       <div class="boot-line">&gt;&gt;&gt; Frame: Rectilinear Series 01</div>
@@ -115,60 +226,67 @@
   <div class="time">12:45</div>
   <div class="date">Monday, July 7</div>
   <div class="quick-widgets">
-    <div class="widget">Steps<br>4,392</div>
-    <div class="widget">Heart<br>72 bpm</div>
-    <div class="widget">Sleep<br>6h 42m</div>
-    <div class="widget">Focus<br>30m</div>
-    <div class="widget">Temp<br>28°C</div>
-    <div class="widget">Weather<br>☀️ Clear</div>
-    <div class="widget">Calendar<br>2 events</div>
-    <div class="widget">Battery<br>85%</div>
+    <div class="card widget">Steps<br>4,392</div>
+    <div class="card widget">Heart<br>72 bpm</div>
+    <div class="card widget">Sleep<br>6h 42m</div>
+    <div class="card widget">Focus<br>30m</div>
+    <div class="card widget">Temp<br>28°C</div>
+    <div class="card widget">Weather<br>☀️ Clear</div>
+    <div class="card widget">Calendar<br>2 events</div>
+    <div class="card widget">Battery<br>85%</div>
   </div>
 </div>
 
 <div class="screen" id="apps">
   <div class="app-grid">
-    <div class="app-icon">Clock</div>
-    <div class="app-icon">Health</div>
-    <div class="app-icon">Messages</div>
-    <div class="app-icon">Weather</div>
-    <div class="app-icon">Music</div>
-    <div class="app-icon">Camera</div>
-    <div class="app-icon">ZetaHub</div>
-    <div class="app-icon">Sync</div>
-    <div class="app-icon">Settings</div>
-    <div class="app-icon">Find</div>
-    <div class="app-icon">Reminders</div>
-    <div class="app-icon">JusDots</div>
+    <div class="card app-icon">Clock</div>
+    <div class="card app-icon">Health</div>
+    <div class="card app-icon">Messages</div>
+    <div class="card app-icon">Weather</div>
+    <div class="card app-icon">Music</div>
+    <div class="card app-icon">Camera</div>
+    <div class="card app-icon">ZetaHub</div>
+    <div class="card app-icon">Sync</div>
+    <div class="card app-icon">Settings</div>
+    <div class="card app-icon">Find</div>
+    <div class="card app-icon">Reminders</div>
+    <div class="card app-icon">JusDots</div>
   </div>
 </div>
 
 <div class="screen" id="notifications">
   <div class="notif-list">
-    <div class="notif-item">No new messages</div>
-    <div class="notif-item">Battery is 85%</div>
-    <div class="notif-item">Event: Meeting @ 2PM</div>
+    <div class="card notif-item">No new messages</div>
+    <div class="card notif-item">Battery is 85%</div>
+    <div class="card notif-item">Event: Meeting @ 2PM</div>
   </div>
 </div>
 
 <div class="screen" id="widgets">
   <div class="quick-widgets">
-    <div class="widget">Timer<br>00:00</div>
-    <div class="widget">Stopwatch<br>--:--</div>
-    <div class="widget">Alarm<br>6:30 AM</div>
-    <div class="widget">Music<br>▶ The Line</div>
+    <div class="card widget">Timer<br>00:00</div>
+    <div class="card widget">Stopwatch<br>--:--</div>
+    <div class="card widget">Alarm<br>6:30 AM</div>
+    <div class="card widget">Music<br>▶ The Line</div>
   </div>
 </div>
 
 <div class="screen" id="settings">
   <div class="settings-list">
-    <div class="setting-option">Brightness: Auto</div>
-    <div class="setting-option">Sound: On</div>
-    <div class="setting-option">Haptics: Strong</div>
-    <div class="setting-option">Wi-Fi: Connected</div>
-    <div class="setting-option">Bluetooth: Connected</div>
-    <div class="setting-option">Theme: Dark</div>
+    <div class="card setting-option">Brightness: Auto</div>
+    <div class="card setting-option">Sound: On</div>
+    <div class="card setting-option">Haptics: Strong</div>
+    <div class="card setting-option">Wi-Fi: Connected</div>
+    <div class="card setting-option">Bluetooth: Connected</div>
+    <div class="card setting-option">Theme: Dark</div>
   </div>
+</div>
+
+<div class="control-center" id="controlCenter">
+  <div class="control-btn">☀</div>
+  <div class="control-btn">🎵</div>
+  <div class="control-btn">📶</div>
+  <div class="control-btn">⚙</div>
 </div>
 
 <div class="dock-bar">
@@ -193,6 +311,12 @@
     function cycleScreens() {
       current = (current + 1) % screens.length;
       switchScreen(screens[current]);
+    }
+
+    function toggleControlCenter(event) {
+      if (event.touches && event.touches[0].clientY > 350) {
+        document.getElementById('controlCenter').classList.toggle('active');
+      }
     }
   </script></body>
 </html>
