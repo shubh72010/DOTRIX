@@ -36,6 +36,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      transition: transform 0.3s ease;
     }
     .time {
       font-size: 48px;
@@ -48,7 +49,9 @@
     .quick-widgets {
       margin-top: 20px;
       display: flex;
+      flex-wrap: wrap;
       gap: 10px;
+      justify-content: center;
     }
     .widget {
       background: rgba(255, 255, 255, 0.05);
@@ -56,7 +59,7 @@
       padding: 10px;
       font-size: 10px;
       text-align: center;
-      flex: 1;
+      width: 60px;
     }
     .apps-button {
       position: absolute;
@@ -80,6 +83,7 @@
       background-color: #0e0e0e;
       padding: 20px;
       box-sizing: border-box;
+      animation: fadeIn 0.3s ease forwards;
     }
     .app-icon {
       background: rgba(255, 255, 255, 0.1);
@@ -97,21 +101,37 @@
       flex-wrap: wrap;
       justify-content: space-between;
     }
+    .touch-strip {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 8px;
+      height: 100%;
+      background: linear-gradient(to bottom, #5400a8 0%, #1a1a1a 100%);
+      opacity: 0.4;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
   </style>
 </head>
 <body>
-  <div class="watch-frame">
+  <div class="watch-frame" ontouchstart="handleSwipeStart(event)" ontouchmove="handleSwipeMove(event)" ontouchend="handleSwipeEnd(event)">
     <div class="status-bar">
       <span>🔋 85%</span>
       <span>12:45 PM</span>
     </div>
-    <div class="home-screen">
+    <div class="home-screen" id="home-screen">
       <div class="time">12:45</div>
       <div class="date">Monday, July 7</div>
       <div class="quick-widgets">
         <div class="widget">Steps<br>2043</div>
         <div class="widget">HR<br>72 bpm</div>
         <div class="widget">Temp<br>28°C</div>
+        <div class="widget">Sleep<br>6h 42m</div>
+        <div class="widget">Weather<br>☀️ 33°C</div>
+        <div class="widget">Focus<br>30m left</div>
       </div>
     </div>
     <button class="apps-button" onclick="document.querySelector('.apps-screen').style.display='block'">All Apps</button>
@@ -127,6 +147,25 @@
         <div class="app-icon">DOTRIX Sync</div>
       </div>
     </div>
-  </div>
-</body>
+    <div class="touch-strip"></div>
+  </div>  <script>
+    let startY = 0;
+    let endY = 0;
+
+    function handleSwipeStart(event) {
+      startY = event.touches[0].clientY;
+    }
+
+    function handleSwipeMove(event) {
+      endY = event.touches[0].clientY;
+    }
+
+    function handleSwipeEnd() {
+      if (startY - endY > 50) {
+        document.querySelector('.apps-screen').style.display = 'block';
+      } else if (endY - startY > 50) {
+        document.querySelector('.apps-screen').style.display = 'none';
+      }
+    }
+  </script></body>
 </html>
