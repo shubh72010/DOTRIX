@@ -1,171 +1,211 @@
 <!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DOTRIX OS UI Mockup</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOTRIX OS - Full Simulated WatchOS</title>
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      margin: 0;
-      background-color: #0a0a0a;
+      background: #0b0b0c;
       color: white;
       font-family: 'Segoe UI', sans-serif;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
     }
     .watch-frame {
-      width: 240px;
-      height: 360px;
-      background-color: #1a1a1a;
+      width: 280px;
+      height: 420px;
+      background: #1e1e1e;
       border-radius: 30px;
-      box-shadow: 0 0 20px #5400a8;
       overflow: hidden;
       position: relative;
+      box-shadow: 0 0 40px rgba(128, 0, 255, 0.5);
     }
-    .status-bar {
+    .status-bar, .dock-bar {
+      background: #111;
       padding: 10px;
       font-size: 12px;
       display: flex;
       justify-content: space-between;
-      background-color: #111;
-      color: #aaa;
-    }
-    .home-screen {
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
       align-items: center;
-      transition: transform 0.3s ease;
-    }
-    .time {
-      font-size: 48px;
-      font-weight: bold;
-    }
-    .date {
-      font-size: 14px;
       color: #bbb;
     }
-    .quick-widgets {
-      margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-    }
-    .widget {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 12px;
-      padding: 10px;
-      font-size: 10px;
-      text-align: center;
-      width: 60px;
-    }
-    .apps-button {
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #5400a8;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 20px;
-      color: white;
-      font-size: 12px;
-    }
-    .apps-screen {
-      display: none;
+    .touch-strip {
       position: absolute;
       top: 0;
-      left: 0;
-      width: 100%;
+      right: 0;
+      width: 10px;
       height: 100%;
-      background-color: #0e0e0e;
-      padding: 20px;
-      box-sizing: border-box;
-      animation: fadeIn 0.3s ease forwards;
+      background: linear-gradient(to bottom, #5400a8, #222);
+      opacity: 0.5;
+      cursor: pointer;
     }
-    .app-icon {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      width: 50px;
-      height: 50px;
-      display: flex;
+    .screen {
+      position: absolute;
+      top: 30px;
+      left: 0;
+      right: 0;
+      bottom: 40px;
+      padding: 15px;
+      overflow-y: auto;
+      display: none;
+      flex-direction: column;
       align-items: center;
+      animation: fadeIn 0.3s ease-in-out forwards;
+    }
+    .screen.active { display: flex; }
+    .time { font-size: 48px; font-weight: bold; }
+    .date { font-size: 14px; color: #aaa; margin-bottom: 20px; }
+    .widget {
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 12px;
+      padding: 10px;
+      margin: 5px;
+      width: 80px;
+      text-align: center;
+      font-size: 12px;
+    }
+    .quick-widgets, .settings-list, .notif-list {
+      display: flex;
+      flex-wrap: wrap;
       justify-content: center;
-      font-size: 10px;
-      margin: 10px;
     }
     .app-grid {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
     }
-    .touch-strip {
+    .app-icon {
+      width: 60px;
+      height: 60px;
+      background: #292929;
+      border-radius: 14px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 8px;
+      font-size: 10px;
+    }
+    .setting-option, .notif-item {
+      width: 100%;
+      background: #2b2b2b;
+      padding: 10px;
+      margin: 4px 0;
+      border-radius: 8px;
+      font-size: 12px;
+      text-align: left;
+    }
+    .dock-bar {
       position: absolute;
-      right: 0;
-      top: 0;
-      width: 8px;
-      height: 100%;
-      background: linear-gradient(to bottom, #5400a8 0%, #1a1a1a 100%);
-      opacity: 0.4;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      background: #111;
+    }
+    .dock-btn {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 14px;
     }
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
-  <div class="watch-frame" ontouchstart="handleSwipeStart(event)" ontouchmove="handleSwipeMove(event)" ontouchend="handleSwipeEnd(event)">
+  <div class="watch-frame">
     <div class="status-bar">
       <span>🔋 85%</span>
-      <span>12:45 PM</span>
-    </div>
-    <div class="home-screen" id="home-screen">
-      <div class="time">12:45</div>
-      <div class="date">Monday, July 7</div>
-      <div class="quick-widgets">
-        <div class="widget">Steps<br>2043</div>
-        <div class="widget">HR<br>72 bpm</div>
-        <div class="widget">Temp<br>28°C</div>
-        <div class="widget">Sleep<br>6h 42m</div>
-        <div class="widget">Weather<br>☀️ 33°C</div>
-        <div class="widget">Focus<br>30m left</div>
-      </div>
-    </div>
-    <button class="apps-button" onclick="document.querySelector('.apps-screen').style.display='block'">All Apps</button>
-    <div class="apps-screen">
-      <div class="app-grid">
-        <div class="app-icon">Clock</div>
-        <div class="app-icon">Health</div>
-        <div class="app-icon">Music</div>
-        <div class="app-icon">Weather</div>
-        <div class="app-icon">Settings</div>
-        <div class="app-icon">Messages</div>
-        <div class="app-icon">ZetaHub</div>
-        <div class="app-icon">DOTRIX Sync</div>
-      </div>
-    </div>
-    <div class="touch-strip"></div>
+      <span>DOTRIX</span>
+    </div><div class="screen active" id="home">
+  <div class="time">12:45</div>
+  <div class="date">Monday, July 7</div>
+  <div class="quick-widgets">
+    <div class="widget">Steps<br>4,392</div>
+    <div class="widget">Heart<br>72 bpm</div>
+    <div class="widget">Sleep<br>6h 42m</div>
+    <div class="widget">Focus<br>30m</div>
+    <div class="widget">Temp<br>28°C</div>
+    <div class="widget">Weather<br>☀️ Clear</div>
+    <div class="widget">Calendar<br>2 events</div>
+    <div class="widget">Battery<br>85%</div>
+  </div>
+</div>
+
+<div class="screen" id="apps">
+  <div class="app-grid">
+    <div class="app-icon">Clock</div>
+    <div class="app-icon">Health</div>
+    <div class="app-icon">Messages</div>
+    <div class="app-icon">Weather</div>
+    <div class="app-icon">Music</div>
+    <div class="app-icon">Camera</div>
+    <div class="app-icon">ZetaHub</div>
+    <div class="app-icon">Sync</div>
+    <div class="app-icon">Settings</div>
+    <div class="app-icon">Find</div>
+    <div class="app-icon">Reminders</div>
+    <div class="app-icon">JusDots</div>
+  </div>
+</div>
+
+<div class="screen" id="notifications">
+  <div class="notif-list">
+    <div class="notif-item">No new messages</div>
+    <div class="notif-item">Battery is 85%</div>
+    <div class="notif-item">Event: Meeting @ 2PM</div>
+  </div>
+</div>
+
+<div class="screen" id="widgets">
+  <div class="quick-widgets">
+    <div class="widget">Timer<br>00:00</div>
+    <div class="widget">Stopwatch<br>--:--</div>
+    <div class="widget">Alarm<br>6:30 AM</div>
+    <div class="widget">Music<br>▶ The Line</div>
+  </div>
+</div>
+
+<div class="screen" id="settings">
+  <div class="settings-list">
+    <div class="setting-option">Brightness: Auto</div>
+    <div class="setting-option">Sound: On</div>
+    <div class="setting-option">Haptics: Strong</div>
+    <div class="setting-option">Wi-Fi: Connected</div>
+    <div class="setting-option">Bluetooth: Connected</div>
+    <div class="setting-option">Theme: Dark</div>
+  </div>
+</div>
+
+<div class="dock-bar">
+  <button class="dock-btn" onclick="switchScreen('home')">Home</button>
+  <button class="dock-btn" onclick="switchScreen('apps')">Apps</button>
+  <button class="dock-btn" onclick="switchScreen('notifications')">Notifs</button>
+  <button class="dock-btn" onclick="switchScreen('widgets')">Widgets</button>
+  <button class="dock-btn" onclick="switchScreen('settings')">Settings</button>
+</div>
+<div class="touch-strip" onclick="cycleScreens()"></div>
+
   </div>  <script>
-    let startY = 0;
-    let endY = 0;
+    const screens = ['home', 'apps', 'notifications', 'widgets', 'settings'];
+    let current = 0;
 
-    function handleSwipeStart(event) {
-      startY = event.touches[0].clientY;
+    function switchScreen(id) {
+      screens.forEach(s => {
+        document.getElementById(s).classList.remove('active');
+      });
+      document.getElementById(id).classList.add('active');
+      current = screens.indexOf(id);
     }
 
-    function handleSwipeMove(event) {
-      endY = event.touches[0].clientY;
-    }
-
-    function handleSwipeEnd() {
-      if (startY - endY > 50) {
-        document.querySelector('.apps-screen').style.display = 'block';
-      } else if (endY - startY > 50) {
-        document.querySelector('.apps-screen').style.display = 'none';
-      }
+    function cycleScreens() {
+      current = (current + 1) % screens.length;
+      switchScreen(screens[current]);
     }
   </script></body>
 </html>
