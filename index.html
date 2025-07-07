@@ -1,0 +1,132 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DOTRIX OS UI Mockup</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #0a0a0a;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .watch-frame {
+      width: 240px;
+      height: 360px;
+      background-color: #1a1a1a;
+      border-radius: 30px;
+      box-shadow: 0 0 20px #5400a8;
+      overflow: hidden;
+      position: relative;
+    }
+    .status-bar {
+      padding: 10px;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      background-color: #111;
+      color: #aaa;
+    }
+    .home-screen {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .time {
+      font-size: 48px;
+      font-weight: bold;
+    }
+    .date {
+      font-size: 14px;
+      color: #bbb;
+    }
+    .quick-widgets {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+    .widget {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 10px;
+      font-size: 10px;
+      text-align: center;
+      flex: 1;
+    }
+    .apps-button {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #5400a8;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      color: white;
+      font-size: 12px;
+    }
+    .apps-screen {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #0e0e0e;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .app-icon {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      margin: 10px;
+    }
+    .app-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <div class="watch-frame">
+    <div class="status-bar">
+      <span>🔋 85%</span>
+      <span>12:45 PM</span>
+    </div>
+    <div class="home-screen">
+      <div class="time">12:45</div>
+      <div class="date">Monday, July 7</div>
+      <div class="quick-widgets">
+        <div class="widget">Steps<br>2043</div>
+        <div class="widget">HR<br>72 bpm</div>
+        <div class="widget">Temp<br>28°C</div>
+      </div>
+    </div>
+    <button class="apps-button" onclick="document.querySelector('.apps-screen').style.display='block'">All Apps</button>
+    <div class="apps-screen">
+      <div class="app-grid">
+        <div class="app-icon">Clock</div>
+        <div class="app-icon">Health</div>
+        <div class="app-icon">Music</div>
+        <div class="app-icon">Weather</div>
+        <div class="app-icon">Settings</div>
+        <div class="app-icon">Messages</div>
+        <div class="app-icon">ZetaHub</div>
+        <div class="app-icon">DOTRIX Sync</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
